@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential libgtest-dev
+        cd /usr/src/gtest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp lib/*.a /usr/lib
+    
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+    
+    - name: Build
+      run: cmake --build build --config Release
+    
+    - name: Test
+      run: |
+        cd build
+        ctest --output-on-failure --verbose
+        
+    - name: Generate test results
+      if: always()
+      run: |
+        mkdir -p artifacts
+        cd build
+        ctest --output-junit ../artifacts/test_results.xml || true
+        
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: artifacts/ 
