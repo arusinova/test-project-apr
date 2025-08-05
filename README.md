@@ -6,6 +6,9 @@ this repository is designed to test the APR (automated program repair) bot funct
 
 ```
 test-project-apr/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── src/
 │   ├── calculator.cpp
 │   └── calculator.h
