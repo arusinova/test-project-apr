@@ -2,4 +2,4 @@ test
 
 test / aug 9 v2
 
-test / aug 10
+test / aug 10 v2
